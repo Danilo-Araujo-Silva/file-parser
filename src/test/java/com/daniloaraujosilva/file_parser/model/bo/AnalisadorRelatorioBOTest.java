@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public class AnalisadorRelatorioBOTest {
 
-    AnalisadorRelatorioBOInterface analisador;
+    AnalisadorRelatorioInterface analisador;
 
     @Before
     public void before() throws IOException {

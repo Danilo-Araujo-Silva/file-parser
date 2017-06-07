@@ -5,7 +5,7 @@ import com.daniloaraujosilva.file_parser.model.enums.TipoOcorrenciaEnum;
 import java.util.List;
 import java.util.Map;
 
-public interface AnalisadorRelatorioBOInterface {
+public interface AnalisadorRelatorioInterface {
 
     /**
      * Total de eventos agrupados por cliente.<br/>
