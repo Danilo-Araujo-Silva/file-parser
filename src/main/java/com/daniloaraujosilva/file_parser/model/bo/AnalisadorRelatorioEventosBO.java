@@ -4,10 +4,12 @@ import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.Event
 import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.HeaderEnum;
 import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.TipoEventoEnum;
 import com.daniloaraujosilva.file_parser.model.exception.ClientCatchableException;
-import com.daniloaraujosilva.file_parser.model.pojo.RelatorioOcorrenciasPojo;
+import com.daniloaraujosilva.file_parser.model.helper.MultiLevelTreeMap;
+import com.daniloaraujosilva.file_parser.model.pojo.RelatorioEventosPojo;
 import com.daniloaraujosilva.file_parser.model.utils.DateTimeUtils;
 import com.daniloaraujosilva.file_parser.model.utils.NumberUtils;
 import com.daniloaraujosilva.file_parser.model.utils.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -22,7 +24,7 @@ import java.util.Map;
 /**
  * Analisador de relatório de ocorrências.
  */
-public class AnalisadorRelatorioOcorrenciasBO implements AnalisadorRelatorioOcorrenciasInterface {
+public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosInterface {
 
 	/**
 	 *
@@ -32,12 +34,17 @@ public class AnalisadorRelatorioOcorrenciasBO implements AnalisadorRelatorioOcor
 	/**
 	 *
 	 */
-	private ArrayList<String> header;
+	private ArrayList<RelatorioEventosPojo> list;
 
 	/**
 	 *
 	 */
-	public AnalisadorRelatorioOcorrenciasBO() {
+	private MultiLevelTreeMap statistics;
+
+	/**
+	 *
+	 */
+	public AnalisadorRelatorioEventosBO() {
 		this("");
 	}
 
@@ -45,7 +52,7 @@ public class AnalisadorRelatorioOcorrenciasBO implements AnalisadorRelatorioOcor
 	 *
 	 * @param reportFilePath
 	 */
-	public AnalisadorRelatorioOcorrenciasBO(String reportFilePath) {
+	public AnalisadorRelatorioEventosBO(String reportFilePath) {
 		this(new File(reportFilePath));
 	}
 
@@ -53,7 +60,7 @@ public class AnalisadorRelatorioOcorrenciasBO implements AnalisadorRelatorioOcor
 	 *
 	 * @param reportFile
 	 */
-	public AnalisadorRelatorioOcorrenciasBO(File reportFile) {
+	public AnalisadorRelatorioEventosBO(File reportFile) {
 		this.reportFile = reportFile;
 	}
 
@@ -77,33 +84,56 @@ public class AnalisadorRelatorioOcorrenciasBO implements AnalisadorRelatorioOcor
 	 *
 	 * @return
 	 */
-	public ArrayList<String> getHeader() {
-		return header;
+	public ArrayList<RelatorioEventosPojo> getList() {
+		return list;
 	}
 
 	/**
 	 *
-	 * @param header
+	 * @param list
 	 */
-	public void setHeader(ArrayList<String> header) {
-		this.header = header;
+	public void setList(ArrayList<RelatorioEventosPojo> list) {
+		this.list = list;
 	}
 
 	/**
 	 *
 	 * @return
 	 */
-	public Boolean parse() throws ClientCatchableException, IOException {
+	public MultiLevelTreeMap getStatistics() {
+		return statistics;
+	}
+
+	/**
+	 *
+	 * @param statistics
+	 */
+	public void setStatistics(MultiLevelTreeMap statistics) {
+		this.statistics = statistics;
+	}
+
+	/**
+	 *
+	 * @throws ClientCatchableException
+	 * @throws IOException
+	 */
+	public void parse() throws ClientCatchableException, IOException {
 		prepare();
 
 		Reader in = new FileReader(getReportFile().getAbsolutePath());
 
 		try {
-			ArrayList<RelatorioOcorrenciasPojo> list = new ArrayList<RelatorioOcorrenciasPojo>();
+			list = new ArrayList<RelatorioEventosPojo>();
 
 			Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(in);
 			for (CSVRecord record : records) {
-				RelatorioOcorrenciasPojo item = new RelatorioOcorrenciasPojo();
+				RelatorioEventosPojo item = new RelatorioEventosPojo();
+
+				/*
+					The validation and sanitization were omited.
+					A critical application should take care about this, but to accomplish this example these
+					strategies were omitted.
+				 */
 				item.setCodigoSequencial(NumberUtils.parseInteger(record.get(HeaderEnum.CODIGO_SEQUENCIAL.getId())));
 				item.setCodigoCliente(StringUtils.trim(record.get(HeaderEnum.CODIGO_CLIENTE.getId())));
 				item.setEvento(EventoEnum.getById(StringUtils.trim(record.get(HeaderEnum.CODIGO_EVENTO.getId()))));
@@ -115,7 +145,7 @@ public class AnalisadorRelatorioOcorrenciasBO implements AnalisadorRelatorioOcor
 				list.add(item);
 			}
 
-			return true;
+			generateStatistics();
 		} catch (Exception exception) {
 			throw exception;
 		} finally {
@@ -160,6 +190,16 @@ public class AnalisadorRelatorioOcorrenciasBO implements AnalisadorRelatorioOcor
 	 */
 	public Boolean sanitize() {
 		return true;
+	}
+
+	public void generateStatistics() {
+		if (list == null) {
+			throw new IllegalArgumentException("A lista de itens é inválida.");
+		} else if (CollectionUtils.isEmpty(list)) {
+			throw new IllegalArgumentException("A lista de itens está vazia.");
+		}
+
+		statistics = new MultiLevelTreeMap();
 	}
 
 	/**

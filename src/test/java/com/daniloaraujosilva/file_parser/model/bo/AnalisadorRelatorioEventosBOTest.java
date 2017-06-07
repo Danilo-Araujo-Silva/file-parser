@@ -12,14 +12,14 @@ import java.io.IOException;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class AnalisadorRelatorioOcorrenciasBOTest {
+public class AnalisadorRelatorioEventosBOTest {
 
-    AnalisadorRelatorioOcorrenciasInterface analisador;
+    private AnalisadorRelatorioEventosInterface analisador;
 
     @Before
     public void before() throws IOException, ClientCatchableException {
         File reportFile = Router.getInstance().get("/src/test/resources", "relatorio.csv");
-        analisador = new AnalisadorRelatorioOcorrenciasBO(reportFile);
+        analisador = new AnalisadorRelatorioEventosBO(reportFile);
         analisador.parse();
     }
 

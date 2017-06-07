@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  *
  */
-public class RelatorioOcorrenciasPojo {
+public class RelatorioEventosPojo {
 
 	/**
 	 *
@@ -56,7 +56,7 @@ public class RelatorioOcorrenciasPojo {
 	 * @param dataTermino
 	 * @param codigoAtendente
 	 */
-	public RelatorioOcorrenciasPojo(
+	public RelatorioEventosPojo(
 		Integer codigoSequencial,
 		String codigoCliente,
 		EventoEnum evento,
@@ -77,7 +77,7 @@ public class RelatorioOcorrenciasPojo {
 	/**
 	 *
 	 */
-	public RelatorioOcorrenciasPojo() {
+	public RelatorioEventosPojo() {
 	}
 
 	/**

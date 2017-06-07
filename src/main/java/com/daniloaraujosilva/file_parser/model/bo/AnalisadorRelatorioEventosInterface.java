@@ -10,15 +10,16 @@ import java.util.Map;
 /**
  * Interface do analisador do relatório de ocorrências.
  *
- * @see AnalisadorRelatorioOcorrenciasBO
+ * @see AnalisadorRelatorioEventosBO
  */
-public interface AnalisadorRelatorioOcorrenciasInterface {
+public interface AnalisadorRelatorioEventosInterface {
 
-    /**
-     *
-     * @return
-     */
-    public Boolean parse() throws ClientCatchableException, IOException;
+	/**
+	 *
+	 * @throws ClientCatchableException
+	 * @throws IOException
+	 */
+	public void parse() throws ClientCatchableException, IOException;
 
     /**
      * Total de eventos agrupados por cliente.<br/>
