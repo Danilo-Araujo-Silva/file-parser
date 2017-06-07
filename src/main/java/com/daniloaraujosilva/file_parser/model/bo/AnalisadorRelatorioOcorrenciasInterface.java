@@ -1,11 +1,24 @@
 package com.daniloaraujosilva.file_parser.model.bo;
 
-import com.daniloaraujosilva.file_parser.model.enums.TipoOcorrenciaEnum;
+import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.TipoEventoEnum;
+import com.daniloaraujosilva.file_parser.model.exception.ClientCatchableException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public interface AnalisadorRelatorioInterface {
+/**
+ * Interface do analisador do relatório de ocorrências.
+ *
+ * @see AnalisadorRelatorioOcorrenciasBO
+ */
+public interface AnalisadorRelatorioOcorrenciasInterface {
+
+    /**
+     *
+     * @return
+     */
+    public Boolean parse() throws ClientCatchableException, IOException;
 
     /**
      * Total de eventos agrupados por cliente.<br/>
@@ -39,7 +52,7 @@ public interface AnalisadorRelatorioInterface {
      *
      * @return Lista de tipos.
      */
-    List<TipoOcorrenciaEnum> getTiposOrdenadosNumerosEventosDecrescente();
+    List<TipoEventoEnum> getTiposOrdenadosNumerosEventosDecrescente();
 
     /**
      * Retorna o codigo sequencial de um evento de desarme que tenha ocorrido apos alarme.<br/>
@@ -50,5 +63,4 @@ public interface AnalisadorRelatorioInterface {
      * @return Lista de codigos sequenciais de eventos com desarme apos o alarme.
      */
     List<Integer> getCodigoSequencialEventosDesarmeAposAlarme();
-
 }

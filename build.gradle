@@ -1,9 +1,11 @@
 buildscript {
   repositories {
+		jcenter()
     mavenCentral()
   }
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE")
+    classpath("org.springframework:springloaded:1.2.6.RELEASE")
   }
 }
 
@@ -11,6 +13,13 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+
+idea {
+	module {
+		inheritOutputDirs = false
+		outputDir = file("$buildDir/classes/main/")
+	}
+}
 
 jar {
   baseName = 'spring_boot_01'
@@ -25,13 +34,12 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-  compile("org.springframework.boot:spring-boot-starter-web")
-  compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-  compile 'mysql:mysql-connector-java'
+	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compile("org.springframework.boot:spring-boot-starter-web")
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
   compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
-  compile group: 'uk.com.robust-it', name: 'cloning', version: '1.7.4'
-  compileOnly('org.projectlombok:lombok')
+  compile group: 'org.apache.commons', name: 'commons-csv', version: '1.4'
+	compileOnly('org.projectlombok:lombok')
   testCompile('org.springframework.boot:spring-boot-starter-test')
   testCompile('com.jayway.jsonpath:json-path')
 }

@@ -1,21 +1,26 @@
 package com.daniloaraujosilva.file_parser.model.bo;
 
-import com.daniloaraujosilva.file_parser.model.enums.TipoOcorrenciaEnum;
+import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.TipoEventoEnum;
+import com.daniloaraujosilva.file_parser.model.exception.ClientCatchableException;
+import com.daniloaraujosilva.file_parser.model.router.Router;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class AnalisadorRelatorioBOTest {
+public class AnalisadorRelatorioOcorrenciasBOTest {
 
-    AnalisadorRelatorioInterface analisador;
+    AnalisadorRelatorioOcorrenciasInterface analisador;
 
     @Before
-    public void before() throws IOException {
-        // analisador = sua implementação
+    public void before() throws IOException, ClientCatchableException {
+        File reportFile = Router.getInstance().get("/src/test/resources", "relatorio.csv");
+        analisador = new AnalisadorRelatorioOcorrenciasBO(reportFile);
+        analisador.parse();
     }
 
     @Test
@@ -40,8 +45,8 @@ public class AnalisadorRelatorioBOTest {
 
     @Test
     public void tipoComMaisEventos() {
-        assertArrayEquals(new TipoOcorrenciaEnum[] { TipoOcorrenciaEnum.ALARME, TipoOcorrenciaEnum.DESARME, TipoOcorrenciaEnum.TESTE, TipoOcorrenciaEnum.ARME },
-                analisador.getTiposOrdenadosNumerosEventosDecrescente().toArray(new TipoOcorrenciaEnum[TipoOcorrenciaEnum.values().length]));
+        assertArrayEquals(new TipoEventoEnum[] { TipoEventoEnum.ALARME, TipoEventoEnum.DESARME, TipoEventoEnum.TESTE, TipoEventoEnum.ARME },
+                analisador.getTiposOrdenadosNumerosEventosDecrescente().toArray(new TipoEventoEnum[TipoEventoEnum.values().length]));
     }
 
     @Test
