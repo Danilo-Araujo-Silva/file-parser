@@ -137,14 +137,14 @@ public class MultiLevelTreeMap extends TreeMap<String, Object>{
 	/**
 	 *
 	 * @param key
-	 * @param classeDeRetorno
+	 * @param returningClass
 	 * @param <R>
 	 * @return
 	 */
-	public <R> R get(Object key, Class<R> classeDeRetorno) {
+	public <R> R get(Object key, Class<R> returningClass) {
 		Object value = get(key);
 		if (value != null) {
-			return classeDeRetorno.cast(value);
+			return returningClass.cast(value);
 		} else {
 			return null;
 		}
