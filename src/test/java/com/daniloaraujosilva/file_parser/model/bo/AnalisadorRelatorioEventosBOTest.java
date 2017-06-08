@@ -3,6 +3,7 @@ package com.daniloaraujosilva.file_parser.model.bo;
 import com.daniloaraujosilva.file_parser.model.enums.relatorio_eventos.TipoEventoEnum;
 import com.daniloaraujosilva.file_parser.model.exception.ClientCatchableException;
 import com.daniloaraujosilva.file_parser.model.router.Router;
+import com.daniloaraujosilva.file_parser.model.test.AbstractTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class AnalisadorRelatorioEventosBOTest {
+public class AnalisadorRelatorioEventosBOTest extends AbstractTest {
 
 	private AnalisadorRelatorioEventosInterface analisador;
 
