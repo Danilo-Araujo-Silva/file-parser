@@ -2,7 +2,7 @@ package com.daniloaraujosilva.file_parser.model.exception;
 
 /**
  * This class is an special kind of exception that can be
- * 	'catched' by the final user. The message that this exception
+ * 	'caught' by the final user. The message that this exception
  * 	contain could be (and maybe should be) shown to the final user.
  */
 public class ClientCatchableException extends Exception {

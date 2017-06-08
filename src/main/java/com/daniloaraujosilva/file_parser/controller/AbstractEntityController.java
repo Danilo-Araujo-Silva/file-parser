@@ -12,17 +12,17 @@ import java.lang.reflect.ParameterizedType;
  * This class have the intention to provide common properties, methods or behaviors
  * 	to controllers about entities.
  */
-abstract public class AbstractEntityController<Service extends EntityServiceInterface, Dao extends EntityDAOInterface, Entity extends EntityInterface> extends AbstractController implements EntityControllerInterface {
+abstract public class AbstractEntityController
+	<
+		Service extends EntityServiceInterface,
+		Entity extends EntityInterface
+	> extends AbstractController
+	implements EntityControllerInterface {
 
 	/**
 	 *
 	 */
 	private Class<Entity> entityClass;
-
-	/**
-	 *
-	 */
-	private Class<Dao> daoClass;
 
 	/**
 	 *
@@ -35,10 +35,6 @@ abstract public class AbstractEntityController<Service extends EntityServiceInte
 	public AbstractEntityController() {
 		setEntityClass(
 			(Class<Entity>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]
-		);
-
-		setDaoClass(
-			(Class<Dao>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]
 		);
 
 		setServiceClass(
@@ -60,22 +56,6 @@ abstract public class AbstractEntityController<Service extends EntityServiceInte
 	 */
 	public void setEntityClass(Class<Entity> entityClass) {
 		this.entityClass = entityClass;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public Class<Dao> getDaoClass() {
-		return daoClass;
-	}
-
-	/**
-	 *
-	 * @param daoClass
-	 */
-	public void setDaoClass(Class<Dao> daoClass) {
-		this.daoClass = daoClass;
 	}
 
 	/**

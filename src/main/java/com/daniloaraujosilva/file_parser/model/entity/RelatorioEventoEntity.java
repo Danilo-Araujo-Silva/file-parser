@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Task entity.
+ * RelatorioEventoEntity.
  */
 @Entity
 @Table(name = "relatorio_evento")
