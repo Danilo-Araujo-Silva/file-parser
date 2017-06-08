@@ -51,6 +51,19 @@ public class NumberUtils {
 	 * @param input
 	 * @return
 	 */
+	public static Long parseLong(Object input) {
+		try {
+			return Long.parseLong(input.toString().trim());
+		} catch (Exception exception) {
+			return null;
+		}
+	}
+
+	/**
+	 *
+	 * @param input
+	 * @return
+	 */
 	public static Integer parseInteger(Object input) {
 		try {
 			return Integer.parseInt(input.toString().trim());

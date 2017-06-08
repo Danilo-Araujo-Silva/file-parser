@@ -1,8 +1,7 @@
 package com.daniloaraujosilva.file_parser.model.utils;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 /**
  *
@@ -54,14 +53,14 @@ public class DateTimeUtils {
 	 * @param input
 	 * @return
 	 */
-	public static LocalDate getFromString(String input) {
-		return getFromString(input, null);
+	public static LocalDateTime getDateTimeFromString(String input) {
+		return getDateTimeFromString(input, null);
 	}
 
 	/**
 	 *
 	 */
-	public static LocalDate getFromString(String input, DateTimeFormatter dateTimeFormatter) {
+	public static LocalDateTime getDateTimeFromString(String input, DateTimeFormatter dateTimeFormatter) {
 		if (input == null) {
 			return null;
 		}
@@ -71,7 +70,7 @@ public class DateTimeUtils {
 		}
 
 		try {
-			return LocalDate.parse(input, dateTimeFormatter);
+			return LocalDateTime.parse(input, dateTimeFormatter);
 		} catch (Exception exception) {
 			return null;
 		}

@@ -1,14 +1,12 @@
 package com.daniloaraujosilva.file_parser.model.bo;
 
-import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.EventoEnum;
-import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.HeaderEnum;
-import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.TipoEventoEnum;
+import com.daniloaraujosilva.file_parser.model.enums.relatorio_eventos.EventoEnum;
+import com.daniloaraujosilva.file_parser.model.enums.relatorio_eventos.HeaderEnum;
+import com.daniloaraujosilva.file_parser.model.enums.relatorio_eventos.TipoEventoEnum;
 import com.daniloaraujosilva.file_parser.model.exception.ClientCatchableException;
 import com.daniloaraujosilva.file_parser.model.helper.MultiLevelTreeMap;
 import com.daniloaraujosilva.file_parser.model.pojo.RelatorioEventosPojo;
-import com.daniloaraujosilva.file_parser.model.utils.DateTimeUtils;
-import com.daniloaraujosilva.file_parser.model.utils.NumberUtils;
-import com.daniloaraujosilva.file_parser.model.utils.StringUtils;
+import com.daniloaraujosilva.file_parser.model.utils.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -17,7 +15,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -138,8 +138,8 @@ public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosI
 				item.setCodigoCliente(StringUtils.trim(record.get(HeaderEnum.CODIGO_CLIENTE.getId())));
 				item.setEvento(EventoEnum.getById(StringUtils.trim(record.get(HeaderEnum.CODIGO_EVENTO.getId()))));
 				item.setTipoEvento(TipoEventoEnum.getById(StringUtils.trim(record.get(HeaderEnum.TIPO_EVENTO.getId()))));
-				item.setDataInicio(DateTimeUtils.getFromString(StringUtils.trim(record.get(HeaderEnum.DATA_INICIO.getId()))));
-				item.setDataTermino(DateTimeUtils.getFromString(StringUtils.trim(record.get(HeaderEnum.DATA_TERMINO.getId()))));
+				item.setDataInicio(DateTimeUtils.getDateTimeFromString(StringUtils.trim(record.get(HeaderEnum.DATA_INICIO.getId()))));
+				item.setDataTermino(DateTimeUtils.getDateTimeFromString(StringUtils.trim(record.get(HeaderEnum.DATA_TERMINO.getId()))));
 				item.setCodigoAtendente(StringUtils.trim(record.get(HeaderEnum.CODIGO_ATENDENTE.getId())));
 
 				list.add(item);
@@ -200,6 +200,92 @@ public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosI
 		}
 
 		statistics = new MultiLevelTreeMap();
+
+		HashSet<String> eventosIds = new HashSet<String>();
+		statistics.put("eventos.ids", eventosIds);
+
+		HashSet<String> clientesIds = new HashSet<String>();
+		statistics.put("clientes.ids", clientesIds);
+
+		HashSet<String> atendentesIds = new HashSet<String>();
+		statistics.put("atendentes.ids", atendentesIds);
+
+		for (RelatorioEventosPojo item : list) {
+			String tiposEventosQuantidadesPath = String.format("eventos.tipos.quantidades.sequencial.%s", item.getTipoEvento().getId());
+			String clientesQuantidadesPath = String.format("clientes.quantidades.sequencial.%s", item.getCodigoCliente());
+			String atendentesQuantidadesAtendimentosPath = String.format("atendendentes.quantidadeAtendimentos.%s", item.getCodigoAtendente());
+			String atendentesSomaAtendimentosPath = String.format("atendentes.somaAtendimentos.%s", item.getCodigoAtendente());
+
+			eventosIds.add(item.getEvento().getId());
+			clientesIds.add(item.getCodigoCliente());
+			atendentesIds.add(item.getCodigoAtendente());
+
+			statistics.put(
+				tiposEventosQuantidadesPath,
+				ObjectUtils.coalesce(
+					statistics.getAsInteger(tiposEventosQuantidadesPath),
+					0,
+					Integer.class
+				) + 1
+			);
+
+			statistics.put(
+				clientesQuantidadesPath,
+				ObjectUtils.coalesce(
+					statistics.getAsInteger(clientesQuantidadesPath),
+					0,
+					Integer.class
+				) + 1
+			);
+
+			statistics.put(
+				atendentesQuantidadesAtendimentosPath,
+				ObjectUtils.coalesce(
+					statistics.getAsInteger(atendentesQuantidadesAtendimentosPath),
+					0,
+					Integer.class
+				) + 1
+			);
+
+			statistics.put(
+				atendentesSomaAtendimentosPath,
+				ObjectUtils.coalesce(
+					statistics.getAsLong(atendentesSomaAtendimentosPath),
+					0l,
+					Long.class
+				) + (
+					Duration.between(
+						item.getDataInicio(),
+						item.getDataTermino()
+					).getSeconds()
+				)
+			);
+		}
+
+		for (String atendenteId : atendentesIds) {
+			String quantidadesAtendimentosPath = String.format("atendendentes.quantidadeAtendimentos.%s", atendenteId);
+			String somaAtendimentosPath = String.format("atendentes.somaAtendimentos.%s", atendenteId);
+			String tempoMedioAtendimentosPath = String.format("atendentes.tempoMedioAtendimentos.%s", atendenteId);
+
+			statistics.put(
+				tempoMedioAtendimentosPath,
+				statistics.getAsLong(somaAtendimentosPath)/statistics.getAsInteger(quantidadesAtendimentosPath)
+			);
+		}
+
+		ArrayList<TipoEventoEnum> tiposEventosMaisOcorrencias = new ArrayList<TipoEventoEnum>();
+
+		for (
+			Object tipoEventoIdObject :
+			MapUtils.sortByValueDescendent(statistics.get("eventos.tipos.quantidades.sequencial", Map.class)).keySet()
+		) {
+			tiposEventosMaisOcorrencias.add(TipoEventoEnum.getById(tipoEventoIdObject.toString()));
+		}
+
+		statistics.put(
+			"eventos.tipos.quantidades.ordenadoDescendente",
+			tiposEventosMaisOcorrencias
+		);
 	}
 
 	/**
@@ -208,7 +294,7 @@ public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosI
 	 */
 	@Override
 	public Map<String, Integer> getTotalEventosCliente() {
-		return null;
+		return statistics.get("clientes.quantidades.sequencial", Map.class);
 	}
 
 	/**
@@ -217,7 +303,7 @@ public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosI
 	 */
 	@Override
 	public Map<String, Long> getTempoMedioAtendimentoAtendente() {
-		return null;
+		return statistics.get("atendentes.tempoMedioAtendimentos", Map.class);
 	}
 
 	/**
@@ -226,7 +312,7 @@ public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosI
 	 */
 	@Override
 	public List<TipoEventoEnum> getTiposOrdenadosNumerosEventosDecrescente() {
-		return null;
+		return statistics.get(	"eventos.tipos.quantidades.ordenadoDescendente", List.class);
 	}
 
 	/**

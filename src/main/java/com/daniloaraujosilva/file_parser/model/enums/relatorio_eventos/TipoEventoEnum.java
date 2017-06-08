@@ -1,4 +1,4 @@
-package com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias;
+package com.daniloaraujosilva.file_parser.model.enums.relatorio_eventos;
 
 public enum TipoEventoEnum {
 

@@ -1,10 +1,10 @@
 package com.daniloaraujosilva.file_parser.model.pojo;
 
-import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.EventoEnum;
-import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.TipoEventoEnum;
+import com.daniloaraujosilva.file_parser.model.enums.relatorio_eventos.EventoEnum;
+import com.daniloaraujosilva.file_parser.model.enums.relatorio_eventos.TipoEventoEnum;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -34,12 +34,12 @@ public class RelatorioEventosPojo {
 	/**
 	 *
 	 */
-	private LocalDate dataInicio;
+	private LocalDateTime dataInicio;
 
 	/**
 	 *
 	 */
-	private LocalDate dataTermino;
+	private LocalDateTime dataTermino;
 
 	/**
 	 *
@@ -61,8 +61,8 @@ public class RelatorioEventosPojo {
 		String codigoCliente,
 		EventoEnum evento,
 		TipoEventoEnum tipoEvento,
-		LocalDate dataInicio,
-		LocalDate dataTermino,
+		LocalDateTime dataInicio,
+		LocalDateTime dataTermino,
 		String codigoAtendente
 	) {
 		this.codigoSequencial = codigoSequencial;
@@ -148,7 +148,7 @@ public class RelatorioEventosPojo {
 	 *
 	 * @return
 	 */
-	public LocalDate getDataInicio() {
+	public LocalDateTime getDataInicio() {
 		return dataInicio;
 	}
 
@@ -156,7 +156,7 @@ public class RelatorioEventosPojo {
 	 *
 	 * @param dataInicio
 	 */
-	public void setDataInicio(LocalDate dataInicio) {
+	public void setDataInicio(LocalDateTime dataInicio) {
 		this.dataInicio = dataInicio;
 	}
 
@@ -164,7 +164,7 @@ public class RelatorioEventosPojo {
 	 *
 	 * @return
 	 */
-	public LocalDate getDataTermino() {
+	public LocalDateTime getDataTermino() {
 		return dataTermino;
 	}
 
@@ -172,7 +172,7 @@ public class RelatorioEventosPojo {
 	 *
 	 * @param dataTermino
 	 */
-	public void setDataTermino(LocalDate dataTermino) {
+	public void setDataTermino(LocalDateTime dataTermino) {
 		this.dataTermino = dataTermino;
 	}
 

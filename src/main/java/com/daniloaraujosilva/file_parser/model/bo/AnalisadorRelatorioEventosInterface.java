@@ -1,6 +1,6 @@
 package com.daniloaraujosilva.file_parser.model.bo;
 
-import com.daniloaraujosilva.file_parser.model.enums.relatorio_ocorrencias.TipoEventoEnum;
+import com.daniloaraujosilva.file_parser.model.enums.relatorio_eventos.TipoEventoEnum;
 import com.daniloaraujosilva.file_parser.model.exception.ClientCatchableException;
 
 import java.io.IOException;

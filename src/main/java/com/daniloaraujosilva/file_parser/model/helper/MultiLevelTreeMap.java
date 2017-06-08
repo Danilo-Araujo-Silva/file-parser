@@ -193,6 +193,16 @@ public class MultiLevelTreeMap extends TreeMap<String, Object>{
 	 * @param key
 	 * @return
 	 */
+	public Long getAsLong(Object key) {
+		return NumberUtils.parseLong(get(key));
+	}
+
+
+	/**
+	 *
+	 * @param key
+	 * @return
+	 */
 	public Integer getAsInteger(Object key) {
 		return NumberUtils.parseInteger(get(key));
 	}
