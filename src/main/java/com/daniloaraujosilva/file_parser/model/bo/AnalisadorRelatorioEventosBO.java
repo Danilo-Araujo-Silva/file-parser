@@ -193,6 +193,15 @@ public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosI
 	}
 
 	public void generateStatistics() {
+		/*
+			IMPORTANTE!
+			Por simplicidade as estatísticas necessárias para passar nos testes foram implementadas neste método.
+			No entanto, para uma aplicação maior (e este sistema propõe uma estrutura para crescer a aplicação)
+				seria interessante importar os dados do relatório para uma tabela do banco de dados e a partir de
+				queries ao banco de dados extrair os dados estatísticos. Caso esta estratégia fosse utilizada vários
+				dos casos de teste poderiam ser resolvidos de forma simplificada.
+		 */
+
 		if (list == null) {
 			throw new IllegalArgumentException("A lista de itens é inválida.");
 		} else if (CollectionUtils.isEmpty(list)) {
@@ -210,30 +219,28 @@ public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosI
 		HashSet<String> atendentesIds = new HashSet<String>();
 		statistics.put("atendentes.ids", atendentesIds);
 
-		ArrayList<Integer> idsEventosCriticos = new ArrayList<Integer>();
+		ArrayList<Integer> codigoSequenciaisEventosCriticos = new ArrayList<Integer>();
 
 		for (RelatorioEventosPojo item : list) {
 			String tiposEventosQuantidadesPath = String.format("eventos.tipos.quantidades.sequencial.%s", item.getTipoEvento().getId());
 			String clientesQuantidadesPath = String.format("clientes.quantidades.sequencial.%s", item.getCodigoCliente());
 			String atendentesQuantidadesAtendimentosPath = String.format("atendendentes.quantidadeAtendimentos.%s", item.getCodigoAtendente());
 			String atendentesSomaAtendimentosPath = String.format("atendentes.somaAtendimentos.%s", item.getCodigoAtendente());
-			String eventosCriticosPath = String.format("eventos.criticos.%s", item.getCodigoCliente());
+			String ultimoTipoEventoClientePath = String.format("eventos.cliente.%s.ultimo", item.getCodigoCliente());
 
 			eventosIds.add(item.getEvento().getId());
 			clientesIds.add(item.getCodigoCliente());
 			atendentesIds.add(item.getCodigoAtendente());
 
-			TipoEventoEnum ultimo = statistics.get(eventosCriticosPath + ".ultimo", TipoEventoEnum.class);
-
+			TipoEventoEnum ultimo = statistics.get(ultimoTipoEventoClientePath, TipoEventoEnum.class);
 			if (
 				ultimo != null
 				&& TipoEventoEnum.ALARME.equals(ultimo)
 				&& TipoEventoEnum.DESARME.equals(item.getTipoEvento())
 			) {
-				idsEventosCriticos.add(item.getCodigoSequencial());
+				codigoSequenciaisEventosCriticos.add(item.getCodigoSequencial());
 			}
-
-			statistics.put(eventosCriticosPath + ".ultimo", item.getTipoEvento());
+			statistics.put(ultimoTipoEventoClientePath, item.getTipoEvento());
 
 			statistics.put(
 				tiposEventosQuantidadesPath,
@@ -277,7 +284,7 @@ public class AnalisadorRelatorioEventosBO implements AnalisadorRelatorioEventosI
 			);
 		}
 
-		statistics.put("eventos.criticos.codigosSequenciais", idsEventosCriticos);
+		statistics.put("eventos.criticos.codigosSequenciais", codigoSequenciaisEventosCriticos);
 
 		for (String atendenteId : atendentesIds) {
 			String quantidadesAtendimentosPath = String.format("atendendentes.quantidadeAtendimentos.%s", atendenteId);

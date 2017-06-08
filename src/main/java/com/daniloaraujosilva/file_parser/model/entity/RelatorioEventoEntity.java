@@ -14,12 +14,4 @@ public class RelatorioEventoEntity extends AbstractEntity<RelatorioEventoEntity>
 	 * Serial.
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Id.
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
-	private Integer id;
 }

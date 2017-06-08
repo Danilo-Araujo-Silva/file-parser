@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * DAO for .
+ * DAO for RelatorioEventoEntity.
  */
 @Transactional
 @Repository

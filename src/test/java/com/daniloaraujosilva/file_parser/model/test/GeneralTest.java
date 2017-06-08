@@ -10,5 +10,4 @@ public class GeneralTest {
 	@Test
 	public void test() {
 	}
-
 }
