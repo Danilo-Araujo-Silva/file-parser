@@ -22,7 +22,7 @@ idea {
 }
 
 jar {
-  baseName = 'spring_boot_01'
+  baseName = 'file-parser'
   version =  '0.1.0'
 }
 
